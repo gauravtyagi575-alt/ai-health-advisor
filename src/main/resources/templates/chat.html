@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>AI Chat</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+
+        <div class="col-md-6">
+            <div class="card shadow-lg p-4">
+				
+				<div class="d-flex justify-content-end mb-2">
+					<a href="/logout" class="btn btn-outline-danger btn-sm">Logout</a>
+				</div>
+
+                <h3 class="text-center mb-4 text-primary">🤖 AI Chat</h3>
+
+                <form action="/ask" method="post" onsubmit="showLoader()">
+                    
+                    <div class="mb-3">
+                        <input type="text" name="question" class="form-control" placeholder="Ask something...">
+                    </div>
+					
+					<button class="mb-2 btn btn-success m-1" type="submit" name="question" value="Give me Weight Loss Tips">Weight Loss</button>
+					<button class="mb-2 btn btn-success m-1" type="submit" name="question" value="Suggest a healthy diet plan">Dite Plan</button>
+					<button class="mb-2 btn btn-success m-1" type="submit" name="question" value="Suggest home workout routien">Home Workout</button>
+
+                    <div class="d-grid">
+                        <button  class="btn btn-primary" onclick="this.innerText='Thinking...'" >
+                            Send
+                        </button>
+                    </div>
+
+                </form>
+
+                <hr>
+				
+				<div id="loader" style="display: none;" class="text-primary mb-2">
+					🤖 AI is typing<span id="dots"></span>
+				</div>
+				
+				<div class="mt-3" style="max-height: 350px; overflow-y: auto;">
+					<div th:each="msg : ${chatHistory}" class="mb-2">
+						<!-- User -->
+						<div th:if="${msg.sender == 'You'}" class="p-2 rounded bg-primary text-white text-end shadow-sm ms-auto" style="max-width: 75%;">
+							<span th:text="${msg.message}"></span>
+						</div>
+						<!-- Ai Messege -->
+						<div th:if="${msg.sender == 'Ai'}" class="p-2 rounded bg-light shadow-sm border" style="max-width: 75%;">
+							<span th:text="${msg.message}"></span>
+						</div>
+						
+					</div>
+				</div>
+				
+				<div class="d-flex justify-content-between mt-3">
+					<a href="/chatList" class="btn btn-outline-dark">📜 View Chats</a>
+					<a href="/new" class="btn btn-warning">➕ New Chat</a>
+					<a href="/clear" class="btn btn-danger">🗑️ Clear Chat</a>
+				</div>
+
+                <div class="d-grid mt-3">
+                    <a href="/" class="btn btn-outline-secondary">🔙 Back</a>
+                </div>   
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    window.onload = function() {
+        let chatBox = document.querySelector('.mt-3');
+        if(chatBox){
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    }
+	
+	function showLoader(){
+		document.getElementById("loader").style.display ="block";
+	}
+	
+	let dots = "";
+	   setInterval(() => {
+	       let dotSpan = document.getElementById("dots");
+	       if(dotSpan){
+	           dots = dots.length < 3 ? dots + "." : "";
+	           dotSpan.innerText = dots;
+	       }
+	   }, 500);
+	
+</script>
+
+</body>
+</html>
